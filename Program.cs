@@ -1,4 +1,3 @@
-﻿
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,7 +16,7 @@ namespace Assignment_2
             Console.WriteLine("Question 1:");
             int[] ar1 = { 2, 5, 1, 3, 4, 7 };
             int n1 = 3;
-            ShuffleArray(ar1, n1);
+            ArrayShuffling(ar1, n1);
             Console.WriteLine("");
 
 
@@ -30,14 +29,14 @@ namespace Assignment_2
             //Question3
             Console.WriteLine("\nQuestion 3:");
             int[] ar3 = { 1, 2, 3, 1, 1, 3 };
-            CoolPairs(ar3);
+            GetColorPairs(ar3);
             Console.WriteLine("");
 
             //Question 4
             Console.WriteLine("Question 4:");
             int[] ar4 = { 2, 7, 11, 15 };
             int target = 9;
-            TwoSum(ar4, target);
+            GetTwoSum(ar4, target);
             Console.WriteLine();
             Console.ReadKey();
 
@@ -45,8 +44,8 @@ namespace Assignment_2
             Console.WriteLine("\nQuestion 5:");
             string s5 = "korfsucy";
             int[] indices = { 6, 4, 3, 2, 1, 0, 5, 7 };
-            RestoreString(s5, indices);
-            Console.WriteLine("");
+            var result = RestoreString(s5, indices);
+            Console.WriteLine(result);
             Console.ReadKey();
 
             //Question 6
@@ -74,7 +73,7 @@ namespace Assignment_2
             //Question 8
             Console.WriteLine("\nQuestion 8:");
             int n8 = 19;
-            if (HappyNumber(n8))
+            if (GetHappyNumber(n8))
             {
                 Console.WriteLine("{0} is a happy number", n8);
             }
@@ -92,7 +91,7 @@ namespace Assignment_2
             int a = 0;
             a = int.MaxValue;
             int[] ar9 = { 7, 1, 5, 3, 6, 4 };
-            int profit = Stocks(ar9);
+            int profit = GetStocks(ar9);
             if (profit == 0)
             {
                 Console.WriteLine("No Profit is possible");
@@ -110,11 +109,6 @@ namespace Assignment_2
             Stairs(n10);
             Console.WriteLine(Stairs(n10));
             Console.ReadKey();
-
-
-
-
-
 
 
 
@@ -162,35 +156,36 @@ namespace Assignment_2
         //It took me 3 hours to solve the problem using in place instead of create a new array
         //I need to make all the non-zeros in the front and all zeros in the end in this array by replacing the position
 
-        public void MoveZeroes(int[] nums)
+
+        private static void MoveZeroes(int[] ar2)
         {
             try
             {
 
-                var z = 0;
-                var c = 1;
-                while (z < nums.Length)
-                {
-                    if (nums[z] != 0 || c >= nums.Length)
-                    {
-                        z++;
-                        c = z + 1;
-                    }
-                    else
-                    {
-                        if (nums[c] == 0)
-                        {
-                            c++;
-                        }
-                        else
-                        {
-                            nums[z] = nums[c];
-                            nums[c] = 0;
-                            z++;
-                            c = z + 1;
-                        }
-                    }
-                }
+
+                //Count of non-zero elements 
+                int count = 0;
+
+                //Count the length of array
+                int n = ar2.Length;
+
+                //Traverse the array.If element encountered is non-zero, then replace the element  
+                for (int i = 0; i < n; i++)
+
+                    if (ar2[i] != 0)
+
+                        //count is incremented and shift all non-zero elements from the starting of the original array
+                        ar2[count++] = ar2[i];
+
+
+                //Make all elements 0 to end, starting from the last non-zero element. 
+                while (count < n)
+                    ar2[count++] = 0;
+
+                // Print out array
+                for (int i = 0; i < n; i++)
+                    Console.Write(ar2[i] + " ");
+                Console.ReadKey();
 
             }
             catch (Exception)
@@ -200,7 +195,6 @@ namespace Assignment_2
             }
 
         }
-
         //Question 3
         //It took me 4 hours to solve the problem and learn dictionary function.To make time complexity to be O(n),we need to use dictionary.
         //Contains key function in the dictionary is very useful, it will make the value in the array to be the key in this dictionary.
@@ -244,41 +238,14 @@ namespace Assignment_2
         //It took me 4 hours to solve the problem.
         //I need to determine if the two element add up equals to target and the print the index of the elements using dictionary to reduce time complexity
 
-        public int[] TwoSum(int[] nums, int target)
-        {
-            try
-            {
-                Hashtable htable = new Hashtable();
-                for (int i = 0; i < nums.Length; i++)
-                {
 
-                    if (htable.ContainsKey(target - nums[i]))
-                    {
-                        return new int[2] { (int)htable[target - nums[i]], i };
-                    }
-                    else if (!htable.ContainsKey(nums[i]))
-                    {
-                        htable.Add(nums[i], i);
-                    }
-                }
-                return new int[2];
-            }
-
-
-            catch (Exception)
-            {
-
-                throw;
-            }
-
-        }
 
 
         //Question 5
         //It took me 3 hours to solve the problem
         //The importance of this one is to rearrange the indices, to make the value of indices is the index of the cArr
 
-        public string RestoreString(string s, int[] indices)
+        public static string RestoreString(string s, int[] indices)
         {
             try
             {
@@ -290,16 +257,11 @@ namespace Assignment_2
                 {
                     arr[indices[i]] = s[i];
                 }
-
                 return new string(arr);
-
-
-
             }
             catch (Exception)
             {
-
-                throw;
+                throw new Exception("An Erro Occur while restoring strings");
             }
         }
 
@@ -334,15 +296,16 @@ namespace Assignment_2
         //Question 7
         //It took me 6 hours to solve the problem and I learn how to use dictionary and sort them in the list as well as double dimensional array
 
-        public int[][] HighFive(int[][] items)
+        private static void HighFive(int[,] items)
         {
             try
             {
                 var dict = new SortedDictionary<int, List<int>>();
-                foreach (var student in items)
+                for (int j = 0; j < items.GetLength(0); j++)
+                //foreach (var student in items)
                 {
-                    var studentId = student[0];
-                    var score = student[1];
+                    var studentId = items[j, 0];
+                    var score = items[j, 1];
                     if (dict.ContainsKey(studentId))
                     {
                         dict[studentId].Add(score);
@@ -356,12 +319,13 @@ namespace Assignment_2
 
                 // now walk through the dict
                 var keys = dict.Keys;
-                var ans = new int[keys.Count][];
+                var ans = new int[keys.Count, keys.Count];
                 int i = 0;
+                // Console.Write(keys);
                 foreach (var student in dict)
                 {
-                    ans[i] = new int[2];
-                    ans[i][0] = student.Key;
+                    //ans[i] = new int[2];
+                    ans[i, 0] = student.Key;
                     var sum = 0;
                     // sort the score and get the first 5
                     var temp = student.Value.ToArray();
@@ -373,10 +337,12 @@ namespace Assignment_2
                         sum += temp[j];
                         k--;
                     }
-                    ans[i][1] = sum / 5;
+                    ans[i, 1] = sum / 5;
+                    //Console.WriteLine("[{0},{1}]",student.Key,ans[i,1]);
                     i++;
                 }
-                return ans;
+
+                Console.Write("[[{0},{1}],[{2},{3}]]", ans[0, 0], ans[0, 1], ans[1, 0], ans[1, 1]);
             }
 
 
@@ -428,9 +394,9 @@ namespace Assignment_2
 
         //Question 9
         //It took me 4 hours to solve the problem.
-        //It's somewhat similar to twosum but need to pay attention that it must be the latter minus the former elements
+        //It's somewhat similar to GetTwoSum but need to pay attention that it must be the latter minus the former elements
 
-        public int MaxProfit(int[] prices)
+        public int GetMaxProfit(int[] prices)
         {
             try
             {
@@ -438,7 +404,7 @@ namespace Assignment_2
                 {
                     return 0;
                 }
-                int maxProfit = Int32.MinValue;
+                int GetMaxProfit = Int32.MinValue;
                 int i = prices.Length - 1;
                 Stack<int> tracker = new Stack<int>();
                 while (i >= 0)
@@ -453,12 +419,12 @@ namespace Assignment_2
                     }
                     else
                     {
-                        maxProfit = Math.Max(tracker.Peek() - prices[i], maxProfit);//Check the maxProfit with the current difference
+                        GetMaxProfit = Math.Max(tracker.Peek() - prices[i], GetMaxProfit);//Check the GetMaxProfit with the current difference
                     }
                     i--;
                 }
 
-                return maxProfit < 0 ? 0 : maxProfit;
+                return GetMaxProfit < 0 ? 0 : GetMaxProfit;
             }
             catch (Exception)
             {
@@ -472,7 +438,7 @@ namespace Assignment_2
         //It took me 2 hours to solve the problem.
         //I learnt the concept of Fibonacci series.
 
-        public static int findStep(int n)
+        public static int FindStep(int n)
         {
             try
             {
@@ -483,25 +449,197 @@ namespace Assignment_2
                         return 2;
 
                     else
-                        return findStep(n - 3) + findStep(n - 2) + findStep(n - 1);
+                        return FindStep(n - 3) + FindStep(n - 2) + FindStep(n - 1);
+                }
+            }
+            catch (Exception)
+            {
+                throw new Exception("An erro occue while finding steps");
+            }
+        }
+
+        private static int Stairs(int n)
+        {
+            try
+            {
+                int first = 1;
+                int second = 1;
+                while (n-- > 0)
+                {
+                    int tmp = first;
+                    first = second;
+                    second = tmp + second;
+                }
+                return first;
+            }
+            catch (Exception)
+            {
+                throw new Exception("an erro occur in stairs function");
+            }
+
+        }
+
+        private static void ArrayShuffling(int[] nums, int n)
+        {
+            try
+            {
+                int[] answer = new int[2 * n];
+                int k = 0, m = n;
+                for (int i = 0; i < 2 * n; i++)
+                {
+                    if (i % 2 == 0)
+                        answer[i] = nums[k++];
+                    else
+                        answer[i] = nums[m++];
+                }
+                for (int i = 0; i < 2 * n; i++)
+                    Console.Write(answer[i] + " ");
+                Console.ReadKey();
+            }
+            catch (Exception)
+            {
+                throw new Exception("An erro occue while shuffling array");
+            }
+        }
+
+        private static void GetColorPairs(int[] nums)
+        {
+            try
+            {
+                Dictionary<int, int> dict = new Dictionary<int, int>();
+
+                int count = 0;
+
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    if (dict.ContainsKey(nums[i]))
+                    {
+                        count += dict[nums[i]];
+                        dict[nums[i]]++;
+                    }
+                    else
+                    { dict[nums[i]] = 1; }
                 }
 
-                
+                Console.WriteLine(count);
+                Console.ReadKey();
+
             }
             catch (Exception)
             {
 
                 throw;
             }
+        }
+        private static int GetStocks(int[] prices)
+        {
+            try
+            {
+                int minprice = int.MaxValue;
+                int GetMaxProfit = 0;
 
+                for (int i = 0; i < prices.Length; i++)
+                {
+                    if (prices[i] < minprice)
+                    {
+                        minprice = prices[i];
+                    }
+                    else if (prices[i] - minprice > GetMaxProfit)
+                    {
+                        GetMaxProfit = prices[i] - minprice;
+                    }
+                }
+
+                return GetMaxProfit;
+            }
+            catch (Exception)
+            {
+
+                throw new Exception("error while getting stoks");
+            }
         }
 
 
+        private static bool Isomorphic(string s, string t)
+        {
+            try
+            {
+                Dictionary<char, int> lookups = new Dictionary<char, int>();
+                Dictionary<char, int> lookupt = new Dictionary<char, int>();
+
+                for (int i = 0; i < s.Length; i++)
+                {
+                    if (!lookups.ContainsKey(s[i]))
+                        lookups.Add(s[i], 0);
+                    if (!lookupt.ContainsKey(t[i]))
+                        lookupt.Add(t[i], 0);
+
+                    if (lookups[s[i]] != lookupt[t[i]])
+                        return false;
+
+                    lookups[s[i]] = i + 1;
+                    lookupt[t[i]] = i + 1;
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        private static void GetTwoSum(int[] nums, int target)
+        {
+            try
+            {
+                var dict = new Dictionary<int, int>();
+
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    if (dict.ContainsKey(target - nums[i])) 
+                    {
+                        Console.Write("[{0},{1}]", dict[target - nums[i]], i);
+                    }
+                    else if (!dict.ContainsKey(nums[i])) 
+                    {
+                        dict.Add(nums[i], i);
+                    }
+                }
+                return;
+            }
+            catch (Exception)
+            {
+                throw new Exception("Erro occur while making two sum");
+            }
+        }
+        private static bool GetHappyNumber(int n)
+
+        {
+            try
+            {
+                HashSet<int> hset = new HashSet<int>() { n };
+                while (n != 1)
+                {
+                    int nn = 0;
+                    while (n > 0)
+                    {
+                        int d = n % 10;
+                        nn += d * d;
+                        n = n / 10;
+                    }
+                    if (!hset.Add(nn))
+                        return false;
+                    n = nn;
+                }
+                return true;
+            }
+            catch (Exception)
+            {
+                throw new Exception("Erro while Getting Happy numbers");
+            }
+        }
 
     }
 
 
 }
-
-
-
